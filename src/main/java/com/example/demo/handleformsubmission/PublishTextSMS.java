@@ -1,5 +1,7 @@
 package com.example.demo.handleformsubmission;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
@@ -11,6 +13,8 @@ import software.amazon.awssdk.services.sns.model.SnsException;
 
 @Component("PublishTextSMS")
 public class PublishTextSMS {
+	
+	private static final Logger log = LoggerFactory.getLogger(PublishTextSMS.class);
 
 	public void sendMessage(String id) {
 		
@@ -32,8 +36,11 @@ public class PublishTextSMS {
 					.build();
 			
 			PublishResponse result = snsClient.publish(request);
+			log.info(message);
+			log.info("SMS Message sent to phone number {} with result {} {}", phoneNumber, result.sdkHttpResponse().statusCode(), result.sdkHttpResponse().statusText());
 					
 		} catch (SnsException e) {
+			log.info("There was an error sending notification message. Error details: {} ", e.awsErrorDetails().errorMessage());
 			System.err.println(e.awsErrorDetails().errorMessage());
 			System.exit(1);
 		}

@@ -1,5 +1,7 @@
 package com.example.demo.handleformsubmission;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import static software.amazon.awssdk.enhanced.dynamodb.mapper.StaticAttributeTags.primaryPartitionKey;
@@ -16,6 +18,8 @@ import software.amazon.awssdk.services.dynamodb.model.ProvisionedThroughput;
 
 @Component("DynamoDBEnhanced")
 public class DynamoDBEnhanced {
+	
+	private static final Logger log = LoggerFactory.getLogger(DynamoDBEnhanced.class);
 	
 	private final ProvisionedThroughput DEFAULT_PROVISIONED_THROUGHPUT = 
 			ProvisionedThroughput.builder()
@@ -68,6 +72,7 @@ public class DynamoDBEnhanced {
 					.build();
 			
 			mappedTable.putItem(enhancedRequest);
+			log.info("Item with Id '{}' successfully added to the DynmoDb table: '{}'", item.getId(), mappedTable.tableName());
 
 		} catch (Exception e) {
 			e.getStackTrace();
